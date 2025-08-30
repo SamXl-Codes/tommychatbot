@@ -13,6 +13,7 @@ TommyChat is a conversational AI chatbot built with [Gradio](https://www.gradio.
 - A valid [Google Generative AI API key](https://aistudio.google.com/) for Gemini 1.5 Flash
 - Git for cloning the repository
 - A web browser to access the Gradio interface
+- Render hosting platform for deployment 
 
 ## Installation
 1. **Clone the Repository**:
