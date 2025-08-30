@@ -92,5 +92,6 @@ with app:
     clear.click(clear_chat, outputs=[msg, chatbot])
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 7860))  # Render gives us a PORT
     app.queue()
-    app.launch(share=True)
+    app.launch(server_name="0.0.0.0", server_port=port)
