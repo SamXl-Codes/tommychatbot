@@ -17,7 +17,7 @@ TommyChat is a conversational AI chatbot built with [Gradio](https://www.gradio.
 ## Installation
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/tommychatbot.git
+   git clone https://github.com/SamXI-Codes/tommychatbot.git
    cd tommychatbot
 
 2. **Set Up a Virtual Environment (recommended)**:
