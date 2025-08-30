@@ -1,34 +1,50 @@
 import os
 import gradio as gr
-from langchain_core.messages import HumanMessage, AIMessage 
-from langchain_core.output_parsers import StrOutputParser
+from dotenv import load_dotenv
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.output_parsers import StrOutputParser  # Updated import
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+# Load environment variables
+load_dotenv()
+gemini_key = os.getenv("GEMINI_API_KEY")
+if not gemini_key:
+    raise ValueError("GEMINI_API_KEY not found in .env file")
+print("API Key:", gemini_key)  # Debugging
+
+# Disable ADC
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ""
+
 system_prompt = """
     You are TommyChat.
-    Answer any question in your best view, question can be any aspect of life, work, academics and so on.
-
+    Answer any question in your best view, question can be any aspect of life, work, academics bedeutungand so on.
     You should also have a sense of humor.
 """
 
-llm = ChatGoogleGenerativeAI(
-    model = "gemini-2.5-flash",
-    google_api_key=gemini_key,
-    temperature=0.5,
-)
+# Initialize Gemini LLM
+try:
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",  # Correct model name
+        google_api_key=gemini_key,
+        temperature=0.5,
+        credentials=None,  # Disable ADC
+    )
+except Exception as e:
+    print(f"Failed to initialize LLM: {e}")
+    raise
 
+# Build prompt chain
 prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt),
-    (MessagesPlaceholder(variable_name="history")),
+    MessagesPlaceholder(variable_name="history"),
     ("user", "{input}")]
 )
 
 chain = prompt | llm | StrOutputParser()
 
-
+# Chat function
 def chat(user_input, hist):
-
     langchain_history = []
     for item in hist:
         if item["role"] == "user":
@@ -36,36 +52,45 @@ def chat(user_input, hist):
         elif item['role'] == 'assistant':
             langchain_history.append(AIMessage(content=item['content']))
 
-    response = chain.invoke({"input": user_input, "history": langchain_history})
+    try:
+        response = chain.invoke({"input": user_input, "history": langchain_history})
+        return "", hist + [
+            {"role": "user", "content": user_input},
+            {"role": "assistant", "content": str(response)}
+        ]
+    except Exception as e:
+        return f"Error: {str(e)}", hist
 
-    return "", hist + [{"role": "user", "content": user_input},
-                {"role": "assistant", "content": response}]
-
-
+# Clear chat
 def clear_chat():
-    return"", []
+    return "", []
 
+# Build Gradio app
 app = gr.Blocks(
     title="Connect with TommyChat",
     theme=gr.themes.Soft(),
 )
 
 with app:
-    gr.Markdown (
+    gr.Markdown(
         """
         # Connect with TommyChat
         Start your personal conversation...
         """
     )
 
-    chatbot = gr.Chatbot(type='messages', avatar_images= [None, 'tommychat.png'],
-                         show_label=False)
-
-    msg = gr.Textbox(show_label=False, placeholder= "Ask Tommychat anything....")
+    chatbot = gr.Chatbot(
+        type= "messages",
+        label=None,
+        value=[]
+    )
+    msg = gr.Textbox(show_label=False, placeholder="Ask TommyChat anything....")
 
     msg.submit(chat, [msg, chatbot], [msg, chatbot])
 
     clear = gr.Button("Clear Chat")
     clear.click(clear_chat, outputs=[msg, chatbot])
 
-app.queue() 
+if __name__ == "__main__":
+    app.queue()
+    app.launch()
