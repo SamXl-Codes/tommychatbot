@@ -1,150 +1,70 @@
-TommyChat
+# TommyChat
 
-TommyChat is a conversational AI chatbot built with Gradio, LangChain, and Google's Gemini 1.5 Flash model. It allows users to engage in interactive, humorous conversations on topics related to life, work, academics, and more. The chatbot maintains conversation history for context-aware responses and features a user-friendly web interface.
+TommyChat is a conversational AI chatbot built with [Gradio](https://www.gradio.app/), [LangChain](https://python.langchain.com/), and Google's [Gemini 1.5 Flash](https://ai.google.dev/) model. It enables interactive, humorous conversations on topics like life, work, academics, and more, with a user-friendly web interface and conversation history for context-aware responses.
 
-Features
+## Features
+- **Interactive Chat**: Engage in real-time conversations with TommyChat, infused with a touch of humor.
+- **Conversation History**: Maintains context by storing previous messages in the session.
+- **Web Interface**: Powered by Gradio, offering a clean and intuitive UI.
+- **Customizable**: Configurable via environment variables for the Gemini API key.
 
+## Prerequisites
+- Python 3.8 or higher (tested with Python 3.13)
+- A valid [Google Generative AI API key](https://aistudio.google.com/) for Gemini 1.5 Flash
+- Git for cloning the repository
+- A web browser to access the Gradio interface
 
+## Installation
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/SamXI-Codes/tommychatbot.git
 
+2. **Set Up a Virtual Environment (recommended)**:
+   ```bash 
+   python -m venv venv .\venv\Scripts\activate  # On Windows
+   source venv/bin/activate  # On Mac/Linux
 
+3. **Install Dependencies**:
+    ```bash
+    pip install python-dotenv langchain-core langchain-google-genai gradio
 
-Interactive Chat: Engage in real-time conversations with TommyChat, which responds with a touch of humor.
-
-
-
-Conversation History: Maintains context by storing previous messages in the session.
-
-
-
-Web Interface: Powered by Gradio, providing a clean and intuitive UI.
-
-
-
-Customizable: Configurable via environment variables for the Gemini API key. 
-
-Installation
-
-
-
-
-
-Clone the Repository:
-
-git clone https://github.com/your-username/tommychatbot.git
-cd tommychatbot
-
-
-
-Set Up a Virtual Environment (optional but recommended):
-
-python -m venv venv
-.\venv\Scripts\activate  # On Windows
-source venv/bin/activate  # On Mac/Linux
-
-
-
-Install Dependencies:
-
-pip install python-dotenv langchain-core langchain-google-genai gradio
-
-
-
-Create a .env File: In the project root directory (tommychatbot/), create a .env file with your Gemini API key:
-
-GEMINI_API_KEY=your_actual_api_key_here
-
+4. **Create a .env File**:
+In the tommychatbot/ directory, create a .env file with:
+plaintextGEMINI_API_KEY=your_actual_api_key_here
 Obtain your API key from Google AI Studio or Google Cloud Console.
 
-Usage
+## Usage
+1. **Run the Application**:
+   ```bash
+    python main2.py
 
-
-
-
-
-Run the Application:
-
-python main2.py
-
-
-
-Access the Chatbot:
-
-
-
-
-
-Open your web browser and navigate to http://127.0.0.1:7860 (default Gradio URL).
-
-
-
+2. **Access the Chatbot**:
+Open http://127.0.0.1:7860 in a web browser (default Gradio URL).
 Enter a message in the textbox and press Enter to chat with TommyChat.
-
-
-
 Click the "Clear Chat" button to reset the conversation history.
 
+3. **Share Publicly (Optional)**:
+To create a public URL:
 
-
-Share Publicly (Optional): To create a public URL for sharing:
-
-
-
-
-
-Update main2.py to set app.launch(share=True, debug=True).
-
-
-
-Ensure you have a Hugging Face token for authentication:
-
+Edit main2.py to set:
+   ```python
+if __name__ == "__main__":
+    app.queue()
+    app.launch(share=True, debug=True)
+ ```
+Install huggingface_hub and log in for authentication:
+ ``` bash
 pip install huggingface_hub
 huggingface-cli login
+ ```
+- **Add HF_TOKEN=your_hugging_face_token_here to the .env file.**
+- **Run python main2.py and check the terminal for a public URL (e.g., https://<some-id>.gradio.live).**
 
 
+## Project Structure
 
-Add HF_TOKEN=your_hugging_face_token_here to the .env file.
-
-
-
-Run python main2.py and check the terminal for the public URL (e.g., https://<some-id>.gradio.live).
-
-Troubleshooting
-
-
-
-
-
-Import Errors: Ensure all dependencies are installed in the correct Python environment. Run pip list to verify.
-
-
-
-API Key Issues: Confirm your GEMINI_API_KEY is valid and correctly formatted in the .env file.
-
-
-
-No Public Link: Check your internet connection, firewall settings, and ensure the FRP binary (frpc_windows_amd64_v0.2) is present in the Gradio package directory. See the Gradio documentation for more details.
-
-
-
-Chat Format Errors: The chatbot uses the messages format ([{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]). Ensure type="messages" is set in the gr.Chatbot component.
-
-Project Structure
-
-
-
-
-
-main2.py: Main script implementing the chatbot logic and Gradio interface.
-
-
-
-.env: Environment file for storing the Gemini API key (not tracked in Git).
-
-
-
-README.md: This file, providing project documentation.
-
-
-License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+- **main2.py: Main script for the chatbot logic and Gradio interface.**
+- **.env: Stores API keys (not tracked in Git).**
+- **.gitignore: Excludes sensitive files like .env and venv/.**
+- **README.md: This documentation.**
+- **LICENSE: MIT License file.**
