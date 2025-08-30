@@ -1,1 +1,4 @@
-gradio langchain-core langchain-google-genai
+gradio 
+python-dotnev
+langchain-core 
+langchain-google-genai
