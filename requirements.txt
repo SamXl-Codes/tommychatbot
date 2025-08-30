@@ -1,4 +1,4 @@
 gradio 
-python-dotnev
+python-dotenv
 langchain-core 
 langchain-google-genai
