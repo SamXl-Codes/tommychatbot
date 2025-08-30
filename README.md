@@ -34,6 +34,14 @@ In the tommychatbot/ directory, create a .env file with:
 plaintextGEMINI_API_KEY=your_actual_api_key_here
 Obtain your API key from Google AI Studio or Google Cloud Console.
 
+5. **When deploying on Render, the entry point in main2.py is already configured for Render’s environment**:
+   ```bash
+    if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 7860))  # Render gives us a PORT
+    app.queue()
+    app.launch(server_name="0.0.0.0", server_port=port)
+Render will assign your app a public URL automatically after deployment.
+
 ## Usage
 1. **Run the Application**:
    ```bash
@@ -44,23 +52,24 @@ Open http://127.0.0.1:7860 in a web browser (default Gradio URL).
 Enter a message in the textbox and press Enter to chat with TommyChat.
 Click the "Clear Chat" button to reset the conversation history.
 
-3. **Share Publicly (Optional)**:
-To create a public URL:
-
-Edit main2.py to set:
-   ```python
-if __name__ == "__main__":
-    app.queue()
-    app.launch(share=True, debug=True)
- ```
-Install huggingface_hub and log in for authentication:
- ``` bash
-pip install huggingface_hub
-huggingface-cli login
- ```
-- **Add HF_TOKEN=your_hugging_face_token_here to the .env file.**
-- **Run python main2.py and check the terminal for a public URL (e.g., https://<some-id>.gradio.live).**
-
+## Deployment on Render 
+1. Push your project to GitHub.
+2. Log in to Render and create a New Web Service.
+3. Connect your GitHub repo.
+4. Configure the service:
+- Environment:
+  ```bash
+  Python 3
+- Build Command:
+   ```bash
+   pip install -r requirements.txt
+- Start Command:
+   ```bash
+  python main2.py
+- Add your environment variables under Render > Environment:
+  ```bash
+  GEMINI_API_KEY=your_actual_api_key_here
+Once deployed, Render will give you a permanent public URL that you can share with others
 
 ## Project Structure
 
